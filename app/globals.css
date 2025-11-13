@@ -25,6 +25,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* 스크롤바로 인한 레이아웃 흔들림 방지 */
+.scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

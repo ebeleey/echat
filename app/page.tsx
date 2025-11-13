@@ -124,7 +124,7 @@ export default function Home() {
       {hasMessages ? (
         <>
           {/* 메시지 영역 - 애니메이션 */}
-          <div className="flex-1 overflow-y-auto transition-opacity duration-500 ease-in-out">
+          <div className="flex-1 overflow-y-scroll transition-opacity duration-500 ease-in-out scrollbar-gutter-stable">
             <div className="mx-auto flex max-w-4xl flex-col px-6 py-8">
               {messages.map((message, index) => (
                 <div
