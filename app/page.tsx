@@ -74,7 +74,7 @@ export default function Home() {
       <header className="border-b bg-white px-4 py-3 shadow-sm">
         <h1 className="text-xl font-semibold text-gray-900">
           지식 기반 챗봇
-        </h1>
+          </h1>
         <p className="text-sm text-gray-500">
           Q&A 데이터셋 기반 질문 답변 시스템
         </p>
@@ -149,12 +149,12 @@ export default function Home() {
               type="submit"
               disabled={isLoading || !input.trim()}
               className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
-            >
+          >
               전송
             </button>
           </div>
         </form>
-      </div>
+        </div>
     </div>
   );
 }

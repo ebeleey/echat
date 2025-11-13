@@ -11,6 +11,7 @@ Q&A 데이터셋을 벡터 데이터베이스에 저장하고, 유사도 검색�
 - Excel 파일(QnA.xlsx)에서 Q&A 데이터 읽기
 - Google Gemini 임베딩을 사용한 벡터 변환
 - Qdrant 벡터 DB에 데이터 저장 및 검색
+- **하이브리드 검색**: 벡터 검색(Semantic) + 키워드 검색 결합
 - 유사도 기반 답변 검색 (할루시네이션 방지)
 - ChatGPT 스타일 웹 UI
 
@@ -27,7 +28,9 @@ app/
 
 lib/
   embedding.ts      # 텍스트 임베딩 함수 (Gemini)
-  vector.ts         # Qdrant 연동 및 검색
+  vector.ts         # Qdrant 연동 및 벡터 검색
+  keyword-search.ts # 키워드 기반 검색
+  hybrid-search.ts  # 하이브리드 검색 (벡터 + 키워드)
   types.ts          # 데이터 타입 정의
 
 scripts/
