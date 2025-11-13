@@ -13,8 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "지식 기반 챗봇",
-  description: "벡터 데이터베이스를 활용한 Q&A 챗봇 시스템",
+  title: "e-chat",
+  description: "Perso.ai에 대해 물어보세요.",
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({
