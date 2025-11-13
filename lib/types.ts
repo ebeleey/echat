@@ -29,5 +29,6 @@ export interface AskResponse {
   answer: string;
   found: boolean;
   similarity?: number;
+  recommendedQuestions?: string[];
 }
 

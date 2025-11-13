@@ -6,6 +6,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  recommendedQuestions?: string[];
 }
 
 export default function Home() {
@@ -65,6 +66,7 @@ export default function Home() {
         role: 'assistant',
         content: data.answer,
         timestamp: new Date(),
+        recommendedQuestions: data.recommendedQuestions,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -144,6 +146,22 @@ export default function Home() {
                     <p className="whitespace-pre-wrap text-sm leading-relaxed">
                       {message.content}
                     </p>
+                    {message.role === 'assistant' && message.recommendedQuestions && message.recommendedQuestions.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-slate-200">
+                        <p className="mb-2 text-xs font-medium text-slate-500">이런 질문은 어떠세요?</p>
+                        <div className="flex flex-col gap-2">
+                          {message.recommendedQuestions.map((question, qIndex) => (
+                            <button
+                              key={qIndex}
+                              onClick={() => handleSubmit(question)}
+                              className="cursor-pointer text-left rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 shadow-soft transition-all hover:border-blue-300 hover:bg-blue-50 hover:shadow-soft-md"
+                            >
+                              {question}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
