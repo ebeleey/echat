@@ -1,6 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { ArrowUp, Sparkles } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -113,7 +113,11 @@ export default function Home() {
       <div className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
         <div className="mx-auto flex items-center justify-between px-12 py-4">
           <div className="flex items-center gap-3">
-            <Sparkles className="h-5 w-5 text-blue-600" fill="currentColor" />
+            <img
+              src="/icon.png"
+              alt="e-chat icon"
+              className="h-6 w-6"
+            />
             <div>
               <h1 className="cursor-default select-none text-xl font-semibold text-slate-900">e-chat</h1>
             </div>
@@ -259,6 +263,23 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* 푸터 */}
+      <footer className="py-1">
+        <div className="mx-auto max-w-4xl px-6">
+          <p className="text-center text-[10px] text-slate-400 opacity-50">
+            <a
+              href="https://www.flaticon.com/kr/free-icons/"
+              title=" 아이콘"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-slate-500 transition-colors"
+            >
+               아이콘 제작자: heisenberg_jr - Flaticon
+            </a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
