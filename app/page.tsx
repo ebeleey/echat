@@ -1,6 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle } from 'lucide-react';
+import { ArrowUp, Sparkles } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -106,20 +106,14 @@ export default function Home() {
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="flex h-screen flex-col bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100">
-      {/* 헤더 - 메시지가 있을 때만 표시 (애니메이션) */}
-      <div
-        className={`border-b border-slate-200 bg-white/80 backdrop-blur-sm transition-all duration-500 ease-in-out ${
-          hasMessages
-            ? 'opacity-100 max-h-20 translate-y-0'
-            : 'opacity-0 max-h-0 -translate-y-full overflow-hidden'
-        }`}
-      >
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+    <div className="flex h-screen flex-col bg-gradient-to-br from-white via-slate-50 to-white">
+      {/* 헤더 */}
+      <div className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+        <div className="mx-auto flex items-center justify-between px-12 py-4">
           <div className="flex items-center gap-3">
-            <MessageCircle className="h-5 w-5 text-blue-600" />
+            <Sparkles className="h-5 w-5 text-blue-600" fill="currentColor" />
             <div>
-              <h1 className="text-xl font-semibold text-slate-900">e-chat</h1>
+              <h1 className="cursor-default select-none text-xl font-semibold text-slate-900">e-chat</h1>
             </div>
           </div>
         </div>
@@ -141,10 +135,10 @@ export default function Home() {
                   }}
                 >
                   <div
-                    className={`max-w-xl rounded-xl px-4 py-3 shadow-sm transition-all ${
+                    className={`max-w-xl rounded-xl px-4 py-3 transition-all ${
                       message.role === 'user'
-                        ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white'
-                        : 'bg-white text-slate-900 border border-slate-200'
+                        ? 'bg-gradient-to-br from-blue-600 to-purple-700 text-white shadow-blue-purple-soft-lg'
+                        : 'bg-white text-slate-900 border border-slate-200 shadow-soft'
                     }`}
                   >
                     <p className="whitespace-pre-wrap text-sm leading-relaxed">
@@ -167,7 +161,7 @@ export default function Home() {
           {/* 입력 영역 - 하단 고정 (애니메이션) */}
           <div className="border-t border-slate-200 bg-white/80 backdrop-blur-sm transition-all duration-500 ease-in-out">
             <div className="mx-auto max-w-4xl px-6 py-4">
-              <div className="flex gap-3">
+            <div className="flex gap-3 rounded-full border border-slate-300 bg-white px-3 py-2 shadow-soft-lg transition-all duration-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 focus-within:shadow-blue-purple-soft-xl">
                 <input
                   ref={inputRef}
                   type="text"
@@ -176,15 +170,14 @@ export default function Home() {
                   onKeyPress={handleKeyPress}
                   placeholder="질문을 입력하세요..."
                   disabled={isLoading}
-                  className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:bg-slate-50 disabled:text-slate-400"
+                  className="flex-1 pl-3 text-base text-slate-900 placeholder-slate-400 outline-none disabled:bg-transparent disabled:text-slate-400"
                 />
                 <button
                   onClick={() => handleSubmit()}
                   disabled={isLoading || !input.trim()}
-                  className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 px-4 py-3 font-medium text-white transition-all hover:shadow-lg hover:from-blue-700 hover:to-blue-800 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-purple-700 p-3 font-medium text-white shadow-blue-purple-soft transition-all hover:shadow-blue-purple-soft-xl hover:from-blue-700 hover:to-purple-800 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed"
                 >
-                  <Send className="h-4 w-4" />
-                  <span className="text-sm">전송</span>
+                  <ArrowUp className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -214,7 +207,7 @@ export default function Home() {
             >
               <button
                 onClick={() => handleSubmit('Perso.ai는 어떤 서비스인가요?')}
-                className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
+                className="cursor-pointer rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-soft transition-all hover:border-blue-300 hover:bg-blue-50 hover:shadow-soft-md"
               >
                 Perso.ai는 어떤 서비스인가요?
               </button>
@@ -225,7 +218,7 @@ export default function Home() {
               className="w-full max-w-3xl transition-all duration-700 ease-out"
               style={{ animation: 'fadeInUp 0.7s ease-out 0.3s both' }}
             >
-              <div className="flex gap-3 rounded-2xl border border-slate-300 bg-white px-6 py-4 shadow-lg transition-all duration-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:shadow-xl">
+              <div className="flex gap-3 rounded-full border border-slate-300 bg-white px-3 py-3 shadow-soft-lg transition-all duration-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 focus-within:shadow-blue-purple-soft-xl">
                 <input
                   ref={inputRef}
                   type="text"
@@ -234,14 +227,14 @@ export default function Home() {
                   onKeyPress={handleKeyPress}
                   placeholder="질문을 입력하세요..."
                   disabled={isLoading}
-                  className="flex-1 text-base text-slate-900 placeholder-slate-400 outline-none disabled:bg-transparent disabled:text-slate-400"
+                  className="flex-1 pl-3 text-base text-slate-900 placeholder-slate-400 outline-none disabled:bg-transparent disabled:text-slate-400"
                 />
                 <button
                   onClick={() => handleSubmit()}
                   disabled={isLoading || !input.trim()}
-                  className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 px-6 py-2 font-medium text-white transition-all hover:shadow-lg hover:from-blue-700 hover:to-blue-800 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-purple-700 p-3 font-medium text-white shadow-blue-purple-soft transition-all hover:shadow-blue-purple-soft-xl hover:from-blue-700 hover:to-purple-800 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed"
                 >
-                  <Send className="h-5 w-5" />
+                  <ArrowUp className="h-5 w-5" />
                 </button>
               </div>
             </div>
