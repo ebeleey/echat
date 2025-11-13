@@ -7,7 +7,7 @@ let client: QdrantClient | null = null;
 /**
  * Qdrant 클라이언트 가져오기 (지연 초기화)
  */
-function getClient(): QdrantClient {
+export function getClient(): QdrantClient {
   if (!client) {
     const QDRANT_URL = process.env.QDRANT_URL;
     if (!QDRANT_URL) {
@@ -25,7 +25,7 @@ function getClient(): QdrantClient {
   return client;
 }
 
-const COLLECTION_NAME = process.env.QDRANT_COLLECTION || 'qa_pairs';
+export const COLLECTION_NAME = process.env.QDRANT_COLLECTION || 'qa_pairs';
 
 /**
  * Qdrant 컬렉션 초기화
