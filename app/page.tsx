@@ -23,6 +23,12 @@ export default function Home() {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    if (!isLoading && messages.length > 0) {
+      inputRef.current?.focus();
+    }
+  }, [isLoading, messages.length]);
+
   const handleSubmit = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -159,6 +165,7 @@ export default function Home() {
         <div className="mx-auto max-w-4xl px-6 py-4">
           <div className="flex gap-3">
             <input
+              ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
