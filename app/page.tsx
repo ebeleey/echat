@@ -1,7 +1,6 @@
 'use client';
-
 import { useState, useRef, useEffect } from 'react';
-import type { AskResponse } from '@/lib/types';
+import { Send, MessageCircle } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -14,6 +13,7 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -23,8 +23,7 @@ export default function Home() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
@@ -46,8 +45,7 @@ export default function Home() {
         body: JSON.stringify({ question: userMessage.content }),
       });
 
-      const data: AskResponse = await response.json();
-
+      const data = await response.json();
       const assistantMessage: Message = {
         role: 'assistant',
         content: data.answer,
@@ -68,30 +66,53 @@ export default function Home() {
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
-    <div className="flex h-screen flex-col bg-gray-50">
+    <div className="flex h-screen flex-col bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100">
       {/* 헤더 */}
-      <header className="border-b bg-white px-4 py-3 shadow-sm">
-        <h1 className="text-xl font-semibold text-gray-900">
-          지식 기반 챗봇
-          </h1>
-        <p className="text-sm text-gray-500">
-          Q&A 데이터셋 기반 질문 답변 시스템
-        </p>
-      </header>
+      <div className="border-b border-slate-200 bg-white/80 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm">
+              <MessageCircle className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-semibold text-slate-900">e chat</h1>
+              <p className="text-xs text-slate-500">Powered by Perso.ai</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* 메시지 영역 */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="mx-auto max-w-3xl space-y-4">
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto flex max-w-4xl flex-col px-6 py-8">
           {messages.length === 0 && (
-            <div className="flex h-full items-center justify-center">
-              <div className="text-center">
-                <h2 className="mb-2 text-2xl font-semibold text-gray-700">
-                  질문을 입력해주세요
-                </h2>
-                <p className="text-gray-500">
-                  데이터셋에 있는 질문에 대해 답변해드립니다.
-                </p>
+            <div className="flex flex-1 flex-col items-center justify-center text-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50">
+                <MessageCircle className="h-8 w-8 text-blue-600" />
+              </div>
+              <h2 className="mb-2 text-2xl font-semibold text-slate-900">
+                안녕하세요
+              </h2>
+              <p className="mb-8 max-w-sm text-slate-500">
+                Perso.ai에 대해 궁금한 점을 물어봐주세요.
+                <br />
+                무엇을 도와드릴까요?
+              </p>
+              <div className="grid gap-3">
+                <button
+                  onClick={() => setInput('Perso.ai는 무엇인가요?')}
+                  className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 hover:bg-blue-50"
+                >
+                  Perso.ai는 무엇인가요?
+                </button>
               </div>
             </div>
           )}
@@ -99,18 +120,18 @@ export default function Home() {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${
+              className={`mb-4 flex ${
                 message.role === 'user' ? 'justify-end' : 'justify-start'
               }`}
             >
               <div
-                className={`max-w-[80%] rounded-lg px-4 py-3 ${
+                className={`max-w-xl rounded-xl px-4 py-3 shadow-sm transition-all ${
                   message.role === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-900 shadow-sm'
+                    ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white'
+                    : 'bg-white text-slate-900 border border-slate-200'
                 }`}
               >
-                <p className="whitespace-pre-wrap break-words">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed">
                   {message.content}
                 </p>
               </div>
@@ -118,12 +139,12 @@ export default function Home() {
           ))}
 
           {isLoading && (
-            <div className="flex justify-start">
-              <div className="rounded-lg bg-white px-4 py-3 shadow-sm">
-                <div className="flex space-x-2">
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.3s]"></div>
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.15s]"></div>
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-gray-400"></div>
+            <div className="mb-4 flex justify-start">
+              <div className="rounded-xl bg-white px-4 py-3 shadow-sm border border-slate-200">
+                <div className="flex gap-2">
+                  <div className="h-2 w-2 rounded-full bg-slate-400 animate-pulse"></div>
+                  <div className="h-2 w-2 rounded-full bg-slate-400 animate-pulse delay-100"></div>
+                  <div className="h-2 w-2 rounded-full bg-slate-400 animate-pulse delay-200"></div>
                 </div>
               </div>
             </div>
@@ -134,27 +155,29 @@ export default function Home() {
       </div>
 
       {/* 입력 영역 */}
-      <div className="border-t bg-white px-4 py-4">
-        <form onSubmit={handleSubmit} className="mx-auto max-w-3xl">
-          <div className="flex gap-2">
+      <div className="border-t border-slate-200 bg-white/80 backdrop-blur-sm">
+        <div className="mx-auto max-w-4xl px-6 py-4">
+          <div className="flex gap-3">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder="질문을 입력하세요..."
               disabled={isLoading}
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+              className="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:bg-slate-50 disabled:text-slate-400"
             />
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={isLoading || !input.trim()}
-              className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
-          >
-              전송
+              className="flex items-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 px-4 py-3 font-medium text-white transition-all hover:shadow-lg hover:from-blue-700 hover:to-blue-800 disabled:from-slate-300 disabled:to-slate-300 disabled:cursor-not-allowed"
+            >
+              <Send className="h-4 w-4" />
+              <span className="text-sm">전송</span>
             </button>
           </div>
-        </form>
         </div>
+      </div>
     </div>
   );
 }
