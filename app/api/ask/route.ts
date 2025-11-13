@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         `[하이브리드 검색] 질문: "${trimmedQuestion}" - 검색 결과 없음`
       );
       return NextResponse.json<AskResponse>({
-        answer: '데이터에 없습니다.',
+        answer: '말씀을 잘 이해하지 못했어요.\n다시 질문해주세요.',
         found: false,
       });
     }
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
         `margin: ${hasMargin ? '충분' : '부족'}${results.length > 1 ? `, 차이: ${scoreMargin.toFixed(3)}` : ''})`
       );
       return NextResponse.json<AskResponse>({
-        answer: '데이터에 없습니다.',
+        answer: '말씀을 잘 이해하지 못했어요.\n다시 질문해주세요.',
         found: false,
         similarity: finalScore,
       });
