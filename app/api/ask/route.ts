@@ -2,6 +2,31 @@ import { NextRequest, NextResponse } from 'next/server';
 import { hybridSearch, type SearchResultWithScores } from '@/lib/hybrid-search';
 import type { AskRequest, AskResponse } from '@/lib/types';
 
+// 추천 질문 목록 (엑셀 파일의 질문들)
+const RECOMMENDED_QUESTIONS = [
+  "Perso.ai는 어떤 서비스인가요?",
+  "Perso.ai의 주요 기능은 무엇인가요?",
+  "Perso.ai는 어떤 기술을 사용하나요?",
+  "Perso.ai의 사용자는 어느 정도인가요?",
+  "Perso.ai를 사용하는 주요 고객층은 누구인가요?",
+  "Perso.ai에서 지원하는 언어는 몇 개인가요?",
+  "Perso.ai의 요금제는 어떻게 구성되어 있나요?",
+  "Perso.ai는 어떤 기업이 개발했나요?",
+  "이스트소프트는 어떤 회사인가요?",
+  "Perso.ai의 기술적 강점은 무엇인가요?",
+  "Perso.ai를 사용하려면 회원가입이 필요한가요?",
+  "Perso.ai를 이용하려면 영상 편집 지식이 필요한가요?",
+  "Perso.ai 고객센터는 어떻게 문의하나요?"
+];
+
+
+// 랜덤으로 1-2개의 추천 질문 선택
+function getRandomRecommendedQuestions(): string[] {
+  const shuffled = [...RECOMMENDED_QUESTIONS].sort(() => Math.random() - 0.5);
+  const count = Math.random() < 0.5 ? 1 : 2; // 50% 확률로 1개 또는 2개
+  return shuffled.slice(0, count);
+}
+
 const SIMILARITY_THRESHOLD = parseFloat(process.env.SIMILARITY_THRESHOLD || '0.65'); // 하이브리드에서는 낮은 임계값
 const TOP_K = parseInt(process.env.TOP_K || '3', 10);
 const VECTOR_WEIGHT = parseFloat(process.env.VECTOR_WEIGHT || '0.5');
@@ -39,9 +64,11 @@ export async function POST(request: NextRequest) {
       console.log(
         `[하이브리드 검색] 질문: "${trimmedQuestion}" - 검색 결과 없음`
       );
+      const recommendedQuestions = getRandomRecommendedQuestions();
       return NextResponse.json<AskResponse>({
-        answer: '데이터에 없습니다.',
+        answer: '말씀을 잘 이해하지 못했어요.\n다시 질문해주세요.',
         found: false,
+        recommendedQuestions,
       });
     }
 
@@ -93,10 +120,12 @@ export async function POST(request: NextRequest) {
         `신뢰도: ${hasHighConfidence ? '높음' : '낮음'}, ` +
         `margin: ${hasMargin ? '충분' : '부족'}${results.length > 1 ? `, 차이: ${scoreMargin.toFixed(3)}` : ''})`
       );
+      const recommendedQuestions = getRandomRecommendedQuestions();
       return NextResponse.json<AskResponse>({
-        answer: '데이터에 없습니다.',
+        answer: '말씀을 잘 이해하지 못했어요.\n다시 질문해주세요.',
         found: false,
         similarity: finalScore,
+        recommendedQuestions,
       });
     }
 
