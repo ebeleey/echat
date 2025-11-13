@@ -1,0 +1,32 @@
+{
+  "name": "vchat",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "embed": "tsx scripts/embed-dataset.ts"
+  },
+  "dependencies": {
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "next": "16.0.1",
+    "@qdrant/qdrant-js": "^1.15.1",
+    "@google/generative-ai": "^0.24.1",
+    "xlsx": "^0.18.5",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.1",
+    "tsx": "^4.7.1"
+  }
+}
