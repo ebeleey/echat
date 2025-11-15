@@ -107,18 +107,30 @@ export async function POST(request: NextRequest) {
     );
 
     // 답변 반환 조건:
-    // 1. 최종 점수가 임계값 이상
-    // 2. 높은 신뢰도가 있거나 margin이 충분
-    const shouldReturnAnswer = finalScore >= FINAL_SCORE_THRESHOLD && 
-                              (hasHighConfidence || hasMargin);
+    // 1. 최종 점수가 음수이면 무조건 거부
+    // 2. lexical 점수가 0이고 키워드 점수도 0이면 거부 (의미 없는 질문)
+    // 3. 최종 점수가 임계값 이상
+    // 4. 높은 신뢰도가 있거나 margin이 충분
+    // 벡터 점수가 높으면(0.8 이상) 최종 점수 임계값 완화
+    const isInvalidQuestion = finalScore < 0 || (scores.lexical === 0 && scores.keyword === 0);
+    const isVeryHighVectorScore = scores.vector >= 0.9;
+    const relaxedThreshold = scores.vector >= 0.8 ? FINAL_SCORE_THRESHOLD * 0.7 : FINAL_SCORE_THRESHOLD;
+    
+    // 의미 없는 질문은 무조건 거부
+    let shouldReturnAnswer: boolean;
+    if (isInvalidQuestion) {
+      shouldReturnAnswer = false;
+    } else {
+      shouldReturnAnswer = (isVeryHighVectorScore && hasHighConfidence) ||
+                          (finalScore >= relaxedThreshold && (hasHighConfidence || hasMargin));
+    }
 
     if (!shouldReturnAnswer) {
+      const reason = isInvalidQuestion 
+        ? `의미 없는 질문 (최종점수: ${finalScore.toFixed(3)}, lexical: ${scores.lexical.toFixed(3)}, 키워드: ${scores.keyword.toFixed(3)})`
+        : `점수 부족 (점수: ${finalScore.toFixed(3)}, 임계값: ${relaxedThreshold.toFixed(3)}, 신뢰도: ${hasHighConfidence ? '높음' : '낮음'}, margin: ${hasMargin ? '충분' : '부족'}${results.length > 1 ? `, 차이: ${scoreMargin.toFixed(3)}` : ''})`;
       console.log(
-        `[하이브리드 검색] 질문: "${trimmedQuestion}" - ` +
-        `답변 거부 (점수: ${finalScore.toFixed(3)}, ` +
-        `임계값: ${FINAL_SCORE_THRESHOLD}, ` +
-        `신뢰도: ${hasHighConfidence ? '높음' : '낮음'}, ` +
-        `margin: ${hasMargin ? '충분' : '부족'}${results.length > 1 ? `, 차이: ${scoreMargin.toFixed(3)}` : ''})`
+        `[하이브리드 검색] 질문: "${trimmedQuestion}" - 답변 거부: ${reason}`
       );
       const recommendedQuestions = getRandomRecommendedQuestions();
       return NextResponse.json<AskResponse>({
