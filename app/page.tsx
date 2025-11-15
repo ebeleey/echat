@@ -254,7 +254,11 @@ export default function Home() {
           {/* 입력 영역 - 하단 고정 (애니메이션) */}
           <div className="border-t border-slate-200 bg-white/80 backdrop-blur-sm transition-all duration-500 ease-in-out">
             <div className="mx-auto max-w-4xl px-6 py-4">
-            <div className="flex gap-3 rounded-full border border-slate-300 bg-white px-3 py-2 shadow-soft-lg transition-all duration-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 focus-within:shadow-blue-purple-soft-xl">
+            <div className={`flex gap-3 rounded-full border bg-white px-3 py-2 shadow-soft-lg transition-all duration-300 ${
+              input.length >= 500 
+                ? 'border-red-300 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20' 
+                : 'border-slate-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 focus-within:shadow-blue-purple-soft-xl'
+            }`}>
                 <input
                   ref={inputRef}
                   type="text"
@@ -263,8 +267,14 @@ export default function Home() {
                   onKeyPress={handleKeyPress}
                   placeholder="질문을 입력하세요..."
                   disabled={isLoading}
+                  maxLength={500}
                   className="flex-1 pl-3 text-base text-slate-900 placeholder-slate-400 outline-none disabled:bg-transparent disabled:text-slate-400"
                 />
+                {input.length >= 500 && (
+                  <span className="flex items-center text-xs font-medium px-2 text-red-500">
+                    {input.length}/500
+                  </span>
+                )}
                 <button
                   onClick={() => handleSubmit()}
                   disabled={isLoading || !input.trim()}
@@ -311,7 +321,13 @@ export default function Home() {
               className="w-full max-w-3xl transition-all duration-700 ease-out"
               style={{ animation: 'fadeInUp 0.7s ease-out 0.3s both' }}
             >
-              <div className="flex gap-3 rounded-full border border-slate-300 bg-white px-3 py-3 shadow-soft-lg transition-all duration-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 focus-within:shadow-blue-purple-soft-xl">
+              <div className={`flex gap-3 rounded-full border bg-white px-3 py-3 shadow-soft-lg transition-all duration-300 ${
+                input.length >= 500 
+                  ? 'border-red-300 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20' 
+                  : input.length >= 450 
+                  ? 'border-orange-300 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20'
+                  : 'border-slate-300 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/20 focus-within:shadow-blue-purple-soft-xl'
+              }`}>
                 <input
                   ref={inputRef}
                   type="text"
@@ -320,8 +336,16 @@ export default function Home() {
                   onKeyPress={handleKeyPress}
                   placeholder="질문을 입력하세요..."
                   disabled={isLoading}
+                  maxLength={500}
                   className="flex-1 pl-3 text-base text-slate-900 placeholder-slate-400 outline-none disabled:bg-transparent disabled:text-slate-400"
                 />
+                {input.length >= 450 && (
+                  <span className={`flex items-center text-xs font-medium px-2 ${
+                    input.length >= 500 ? 'text-red-500' : 'text-orange-500'
+                  }`}>
+                    {input.length}/500
+                  </span>
+                )}
                 <button
                   onClick={() => handleSubmit()}
                   disabled={isLoading || !input.trim()}
