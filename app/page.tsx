@@ -144,16 +144,23 @@ export default function Home() {
     const mappedAnswer = QUESTION_ANSWER_MAP[normalizedQuestion];
     
     if (mappedAnswer) {
-      // 매핑된 질문이면 API 호출 없이 바로 답변 표시
+      // 매핑된 질문이면 질문 메시지가 먼저 보이고 스크롤 이동 후 답변 표시
       console.log('[매핑된 질문] API 호출 없이 즉시 답변:', normalizedQuestion);
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: mappedAnswer,
-        timestamp: new Date(),
-        recommendedQuestions: getRandomRecommendedQuestions(),
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-      // pendingQuestion을 설정하지 않아서 useEffect가 실행되지 않음
+      // 질문 메시지가 렌더링되고 스크롤이 이동할 시간을 주기 위해 약간의 딜레이
+      setTimeout(() => {
+        scrollToBottom();
+        setIsLoading(true); // 로딩 애니메이션 표시
+        setTimeout(() => {
+          const assistantMessage: Message = {
+            role: 'assistant',
+            content: mappedAnswer,
+            timestamp: new Date(),
+            recommendedQuestions: getRandomRecommendedQuestions(),
+          };
+          setMessages((prev) => [...prev, assistantMessage]);
+          setIsLoading(false); // 로딩 애니메이션 종료
+        }, 100);
+      }, 50);
       return;
     }
     
@@ -192,16 +199,16 @@ export default function Home() {
       {hasMessages ? (
         <>
           {/* 메시지 영역 - 애니메이션 */}
-          <div className="flex-1 overflow-y-scroll transition-opacity duration-500 ease-in-out scrollbar-gutter-stable">
+          <div className="flex-1 overflow-y-scroll transition-opacity duration-300 ease-in-out scrollbar-gutter-stable">
             <div className="mx-auto flex max-w-4xl flex-col px-6 py-8">
               {messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`mb-4 flex transition-all duration-500 ease-out ${
+                  className={`mb-4 flex transition-all duration-300 ease-out ${
                     message.role === 'user' ? 'justify-end' : 'justify-start'
                   }`}
                   style={{
-                    animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
+                    animation: `fadeInUp 0.3s ease-out ${index * 0.06}s both`,
                   }}
                 >
                   <div
@@ -222,8 +229,7 @@ export default function Home() {
                             <button
                               key={qIndex}
                               onClick={() => handleSubmit(question)}
-                              disabled={isLoading}
-                              className="cursor-pointer text-left rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 shadow-soft transition-all hover:border-blue-300 hover:bg-blue-50 hover:shadow-soft-md disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-slate-200 disabled:hover:bg-slate-50"
+                              className="cursor-pointer text-left rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 shadow-soft transition-all hover:border-blue-300 hover:bg-blue-50 hover:shadow-soft-md"
                             >
                               {question}
                             </button>
